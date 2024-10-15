@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Control de Productos</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <!-- Bootstrap Icons -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <div th:replace="~{components/navbar :: nav_bar}"></div>
+
+        <!-- Tabla Productos -->
+        <div class='container mt-5'>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Lista de Productos</h2>
+                <a class="btn btn-success" th:href="@{/producto/nuevo}">
+                    <i class="bi bi-plus-circle"></i> Agregar producto
+                </a>
+            </div>
+
+            <table class="table table-hover table-bordered text-center shadow-sm">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Código producto</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Marca</th>
+                        <th scope="col">Costo</th>
+                        <th scope="col">Cantidad Disponible</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="producto : ${listaProductos}">
+                        <td th:text="${producto.codigo_producto}"></td>
+                        <td th:text="${producto.nombre}"></td>
+                        <td th:text="${producto.marca}"></td>
+                        <td th:text="${producto.costo}"></td>
+                        <td th:text="${producto.cantidad_disponible}"></td>
+                        <td>
+                            <!-- Botón para abrir el modal de edición -->
+                            <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" th:data-bs-target="'#editModal-' + ${producto.codigo_producto}">
+                                <i class="bi bi-pencil-square"></i> Editar
+                            </button>
+                            <!-- Eliminar producto -->
+                            <a class="btn btn-danger btn-sm ms-2" th:href="@{'/producto/eliminar/' + ${producto.codigo_producto}}" onclick="return confirm('¿Está seguro de eliminar este producto?');">
+                                <i class="bi bi-trash-fill"></i> Eliminar
+                            </a>
+
+                            <!-- Modal de edición -->
+                            <div class="modal fade" th:id="'editModal-' + ${producto.codigo_producto}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editModalLabel">Editar Producto</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form th:action="@{'/producto/editar/' + ${producto.codigo_producto}}" method="post">
+                                                <!-- Campo oculto para el ID del producto -->
+                                                <input type="hidden" name="codigo_producto" th:value="${producto.codigo_producto}"/>
+
+                                                <div class="mb-3">
+                                                    <label for="nombre" class="form-label">Nombre</label>
+                                                    <input type="text" class="form-control" id="nombre" name="nombre" th:value="${producto.nombre}" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="marca" class="form-label">Marca</label>
+                                                    <input type="text" class="form-control" id="marca" name="marca" th:value="${producto.marca}" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="costo" class="form-label">Costo</label>
+                                                    <input type="number" class="form-control" id="costo" name="costo" th:value="${producto.costo}" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="cantidad_disponible" class="form-label">Cantidad Disponible</label>
+                                                    <input type="number" class="form-control" id="cantidad_disponible" name="cantidad_disponible" th:value="${producto.cantidad_disponible}" required>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    </body>
+
+</html>
