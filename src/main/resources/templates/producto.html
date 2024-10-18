@@ -38,7 +38,7 @@
                         <td th:text="${producto.codigo_producto}"></td>
                         <td th:text="${producto.nombre}"></td>
                         <td th:text="${producto.marca}"></td>
-                        <td th:text="${producto.costo}"></td>
+                        <td th:text="'$'+${producto.costo}"></td>
                         <td th:text="${producto.cantidad_disponible}"></td>
                         <td>
                             <!-- Botón para abrir el modal de edición -->

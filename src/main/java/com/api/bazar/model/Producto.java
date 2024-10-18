@@ -1,6 +1,8 @@
 package com.api.bazar.model;
 
 import java.util.List;
+import java.util.ArrayList;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,6 +29,12 @@ public class Producto {
     private Double cantidad_disponible;
 
     // Relación Muchos-a-Muchos con Venta (bidireccional)
-    @ManyToMany(mappedBy = "listaProductos")
-    private List<Venta> ventas;
+    @ManyToMany(mappedBy = "listaProductos", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Venta> ventas = new ArrayList<>();
+
+    // Métodos para desvincular ventas
+    public void removeVenta(Venta venta) {
+        this.ventas.remove(venta);
+        venta.getListaProductos().remove(this);
+    }
 }

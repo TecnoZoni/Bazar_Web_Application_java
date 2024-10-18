@@ -30,6 +30,7 @@
                             <th scope="col">Nombre Cliente</th>
                             <th scope="col">DNI Cliente</th>
                             <th scope="col">Productos</th>
+                            <th scope="col">Total</th>
                             <th scope="col">Acciones</th>
                         </tr>
                     </thead>
@@ -45,6 +46,7 @@
                                     <li th:each="producto : ${venta.listaProductos}" th:text="${producto.nombre}"></li>
                                 </ul>
                             </td>
+                            <td th:text="'$'+${venta.total}"></td>
                             <td>
                                 <a class="btn btn-warning me-2" th:href="@{'/venta/editar/' + ${venta.codigo_venta}}">
                                     <i class="bi bi-pencil-square"></i> Editar

@@ -1,10 +1,13 @@
 package com.api.bazar.service;
 
 import com.api.bazar.model.Producto;
+import com.api.bazar.model.Venta;
 import com.api.bazar.repository.IProductoRepository;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductoService implements IProductoService {
@@ -41,9 +44,18 @@ public class ProductoService implements IProductoService {
         this.prodRepo.save(prod);
     }
 
+    @Transactional
     @Override
     public void deleteOne(Long id) {
-        this.prodRepo.deleteById(id);
+        Producto producto = prodRepo.findById(id).orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+
+        // Desvincular el producto de todas las ventas
+        for (Venta venta : new ArrayList<>(producto.getVentas())) {
+            producto.removeVenta(venta);
+        }
+
+        // Ahora puedes eliminar el producto
+        prodRepo.deleteById(id);
     }
 
 }
