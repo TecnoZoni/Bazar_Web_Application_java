@@ -1,4 +1,4 @@
-package com.api.bazar.controller;
+package com.api.bazar.controller.web;
 
 import com.api.bazar.model.Cliente;
 import com.api.bazar.model.Producto;
@@ -9,7 +9,6 @@ import com.api.bazar.service.IVentaService;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,14 +21,17 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class VentaController {
 
-    @Autowired
-    private IVentaService ventaService;
+    private final IVentaService ventaService;
 
-    @Autowired
-    private IClienteService clienteService;
+    private final IClienteService clienteService;
 
-    @Autowired
-    private IProductoService productoService;
+    private final IProductoService productoService;
+
+    public VentaController(IVentaService ventaService, IClienteService clienteService, IProductoService productoService) {
+        this.ventaService = ventaService;
+        this.clienteService = clienteService;
+        this.productoService = productoService;
+    }
 
     @RequestMapping("/venta")
     public String verPaginaVenta(Model model) {

@@ -5,15 +5,17 @@ import com.api.bazar.model.Venta;
 import com.api.bazar.repository.IProductoRepository;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductoService implements IProductoService {
 
-    @Autowired
-    private IProductoRepository prodRepo;
+    private final IProductoRepository prodRepo;
+
+    public ProductoService(IProductoRepository prodRepo) {
+        this.prodRepo = prodRepo;
+    }
 
     @Override
     public List<Producto> findAll() {

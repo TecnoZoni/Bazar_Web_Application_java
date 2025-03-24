@@ -1,104 +1,185 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Crear Venta</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        <!-- Bootstrap Icons -->
+        <title>Editar Venta | Panel Admin</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+        <style>
+            .card-header-gradient {
+                background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+                color: white;
+                border-radius: 0.375rem 0.375rem 0 0 !important;
+            }
+            .form-control:focus, .form-select:focus {
+                border-color: #6a11cb;
+                box-shadow: 0 0 0 0.25rem rgba(106, 17, 203, 0.25);
+            }
+            .btn-submit {
+                background-color: #6a11cb;
+                border-color: #6a11cb;
+            }
+            .btn-submit:hover {
+                background-color: #5a0db3;
+                border-color: #5a0db3;
+            }
+            .product-card {
+                transition: all 0.3s ease;
+                border: 1px solid #dee2e6;
+                border-radius: 0.375rem;
+            }
+            .product-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+            }
+            .product-card.selected {
+                border-color: #6a11cb;
+                background-color: rgba(106, 17, 203, 0.05);
+            }
+            .product-badge {
+                font-size: 0.8em;
+            }
+        </style>
     </head>
 
     <body>
         <div th:replace="~{components/navbar :: nav_bar}"></div>
 
-        <div class="container mt-4">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="h3">
-                    <i class="bi bi-receipt"></i> Editar Venta
-                </h1>
-                <a class="btn btn-primary" th:href="@{/venta}">
-                    <i class="bi bi-arrow-left-circle"></i> Ver Ventas
-                </a>
-            </div>
-
-            <form th:action="@{/venta/editar}" th:object="${venta}" method="post" class="shadow-lg p-4 rounded border">
-                <input type="hidden" name="codigo_venta" th:value="${venta.codigo_venta}">
-                <!-- Selección del Cliente -->
-                <div class="mb-3">
-                    <label for="idCliente" class="form-label">
-                        <i class="bi bi-person-fill"></i> Seleccione Cliente:
-                    </label>
-                    <select id="idCliente" th:field="*{unCliente.id_cliente}" class="form-select" required>
-                        <option value="" disabled selected>-- Seleccione un cliente --</option>
-                        <option th:each="cliente : ${listaClientes}" th:value="${cliente.id_cliente}" th:text="${cliente.nombre}"></option>
-                    </select>
-
-                </div>
-
-                <!-- Selección de Productos con Checkboxes en Grid Responsive -->
-                <div class="mb-3">
-                    <label class="form-label">
-                        <i class="bi bi-box-seam"></i> Seleccione Productos:
-                    </label>
-                    <div class="row">
-                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3" th:each="producto : ${listaProductos}">
-                            <div class="form-check">
-                                <!-- Añadir data-precio con el precio del producto -->
-                                <input class="form-check-input" type="checkbox" th:field="*{listaProductos}" th:value="${producto.codigo_producto}" th:data-precio="${producto.costo}">
-                                <label class="form-check-label" th:text="${producto.nombre} + ' $' + ${producto.costo}"></label>
-                            </div>
-                        </div>
+        <!-- Main Content -->
+        <div class="container py-5">
+            <div class="card shadow-lg border-0">
+                <!-- Card Header -->
+                <div class="card-header card-header-gradient py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2 class="h4 mb-0">
+                            <i class="bi bi-pencil-square me-2"></i>Editar Venta #<span th:text="${venta.codigo_venta}"></span>
+                        </h2>
+                        <small class="text-white">
+                            <i class="bi bi-calendar me-1"></i>
+                            <span th:text="${#temporals.format(venta.fecha_venta, 'dd/MM/yyyy')}"></span>
+                        </small>
                     </div>
                 </div>
 
-                <!-- Total de la Venta -->
-                <div class="mb-3">
-                    <label for="total" class="form-label">
-                        <i class="bi bi-cash-stack"></i> Total:
-                    </label>
-                    <!-- Campo de solo lectura para el total -->
-                    <input type="number" id="total" th:field="*{total}" class="form-control" placeholder="Total de la venta" readonly>
-                </div>
+                <!-- Card Body -->
+                <div class="card-body p-4">
+                    <form th:action="@{/venta/editar}" th:object="${venta}" method="post">
+                        <input type="hidden" name="codigo_venta" th:value="${venta.codigo_venta}">
 
-                <!-- Botones de acción -->
-                <div class="d-flex justify-content-end">
-                    <button type="submit" class="btn btn-success me-2">
-                        <i class="bi bi-save"></i> Editar Venta
-                    </button>
-                    <a th:href="@{/venta}" class="btn btn-secondary">
-                        <i class="bi bi-x-circle"></i> Cancelar
-                    </a>
+                        <!-- Cliente -->
+                        <div class="mb-4">
+                            <label for="idCliente" class="form-label fw-semibold">
+                                <i class="bi bi-person me-1"></i>Cliente
+                            </label>
+                            <select id="idCliente" th:field="*{unCliente.id_cliente}" class="form-select" required>
+                                <option value="" disabled>-- Seleccione un cliente --</option>
+                                <option th:each="cliente : ${listaClientes}" 
+                                        th:value="${cliente.id_cliente}"
+                                        th:selected="${cliente.id_cliente == venta.unCliente.id_cliente}"
+                                        th:text="${cliente.nombre} + ' ' + ${cliente.apellido} + ' (DNI: ' + ${cliente.dni} + ')'">
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Productos -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-box-seam me-1"></i>Productos
+                            </label>
+                            <div class="row g-3">
+                                <div class="col-12 col-sm-6 col-md-4 col-lg-3" th:each="producto : ${listaProductos}">
+                                    <div class="product-card p-3 h-100 position-relative">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" 
+                                                   th:id="${'prod-' + producto.codigo_producto}"
+                                                   th:field="*{listaProductos}" 
+                                                   th:value="${producto.codigo_producto}" 
+                                                   th:data-precio="${producto.costo}"
+                                                   th:checked="${#lists.contains(venta.listaProductos, producto)}">
+                                            <label class="form-check-label d-block" 
+                                                   th:for="${'prod-' + producto.codigo_producto}">
+                                                <h6 th:text="${producto.nombre}" class="mb-1"></h6>
+                                                <small class="text-muted d-block" th:text="${producto.marca}"></small>
+                                                <span class="badge bg-primary product-badge mt-2">
+                                                    $<span th:text="${#numbers.formatDecimal(producto.costo, 1, 2)}"></span>
+                                                </span>
+                                                <small class="text-muted d-block mt-1" 
+                                                       th:text="'Stock: ' + ${producto.cantidad_disponible}"></small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Total -->
+                        <div class="mb-4">
+                            <label for="total" class="form-label fw-semibold">
+                                <i class="bi bi-cash-stack me-1"></i>Total
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" id="total" th:field="*{total}" 
+                                       class="form-control" readonly>
+                                <span class="input-group-text">.00</span>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-grid gap-3 d-md-flex justify-content-md-end mt-4 pt-3">
+                            <a th:href="@{/venta}" class="btn btn-outline-secondary me-md-2">
+                                <i class="bi bi-arrow-left-circle me-1"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-submit text-white">
+                                <i class="bi bi-save me-1"></i> Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
-            const checkboxes = document.querySelectorAll('.form-check-input');
-            const totalField = document.getElementById('total');
+                const checkboxes = document.querySelectorAll('.form-check-input');
+                const totalField = document.getElementById('total');
 
-            // Función para actualizar el total
-            function updateTotal() {
-            let total = 0;
-            checkboxes.forEach(checkbox => {
-            if (checkbox.checked) {
-            const precio = parseFloat(checkbox.getAttribute('data-precio'));
-            total += precio;
-            }
-            });
-            totalField.value = total.toFixed(2); // Mostrar el total con 2 decimales
-            }
+                // Actualizar total y estilos de tarjetas
+                function updateTotal() {
+                    let total = 0;
+                    checkboxes.forEach(checkbox => {
+                        const card = checkbox.closest('.product-card');
+                        if (checkbox.checked) {
+                            const precio = parseFloat(checkbox.dataset.precio);
+                            total += precio;
+                            card.classList.add('selected');
+                        } else {
+                            card.classList.remove('selected');
+                        }
+                    });
+                    totalField.value = total.toFixed(2);
+                }
 
-            // Escuchar cambios en los checkboxes
-            checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', updateTotal);
-            });
+                // Event listeners
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', updateTotal);
+
+                    // También permitir selección haciendo clic en cualquier parte de la tarjeta
+                    const card = checkbox.closest('.product-card');
+                    card.addEventListener('click', function (e) {
+                        if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'LABEL') {
+                            checkbox.checked = !checkbox.checked;
+                            checkbox.dispatchEvent(new Event('change'));
+                        }
+                    });
+                });
+
+                // Inicializar total y selecciones
+                updateTotal();
             });
         </script>
     </body>
-
 </html>

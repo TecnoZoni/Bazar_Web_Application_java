@@ -1,164 +1,124 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
     <head>
-        <title>Inicio - Bazar</title>
+        <title>API Pública del Bazar</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-        <!-- Bootstrap Icons -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
-        <!-- Custom CSS -->
-        <link rel="stylesheet" href="/css/styles.css">
+        <style>
+            .api-card {
+                border-left: 5px solid #0d6efd;
+                transition: all 0.3s ease;
+            }
+            .api-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            }
+            .hero-bg {
+                background: url('https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') no-repeat center center;
+                background-size: cover;
+                position: relative;
+            }
+            .hero-bg::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.6);
+            }
+        </style>
     </head>
 
     <body>
         <!-- Navbar -->
         <div th:replace="~{components/navbar :: nav_bar}"></div>
 
-        <!-- Bienvenida -->
-        <div class="container mt-5">
-            <div class="text-center">
-                <h1 class="display-4">Bienvenido al Bazar</h1>
-                <p class="lead">Administra clientes, ventas y productos de manera fácil y rápida.</p>
+        <!-- Hero Section -->
+        <div class="hero-bg text-white py-5">
+            <div class="container py-5 position-relative" style="z-index: 1;">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto text-center">
+                        <h1 class="display-4 fw-bold mb-4">API Pública del Bazar</h1>
+                        <p class="lead mb-5">Acceso libre a nuestros servicios RESTful para desarrolladores e integraciones</p>
+                        <a href="/swagger-ui/index.html" class="btn btn-primary btn-lg px-4 me-3">
+                            <i class="bi bi-file-earmark-code"></i> Ver Documentación
+                        </a>
+                        <a href="#api-details" class="btn btn-outline-light btn-lg px-4">
+                            <i class="bi bi-info-circle"></i> Más Información
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Explicación del Programa -->
-        <div class="container mt-5">
-            <h2 class="text-center mb-4"><i class="bi bi-info-circle"></i> Descripción del Programa</h2>
-            <p>El sistema de gestión del bazar permite administrar clientes, productos y ventas a través de una API Restful. Las operaciones que se pueden realizar son Crear, Leer, Actualizar y Eliminar (CRUD) usando solicitudes HTTP.</p>
-        </div>
-
-        <!-- Métodos HTTP -->
-        <div class="container mt-5">
-            <h2 class="text-center mb-4"><i class="bi bi-list-check"></i> Métodos HTTP Configurados</h2>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card mb-3">
+        <!-- API Details -->
+        <div id="api-details" class="container py-5">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="api-card card h-100">
                         <div class="card-body">
-                            <h5 class="card-title"><i class="bi bi-arrow-down-circle"></i> GET</h5>
-                            <p class="card-text">Para obtener la lista de todos los recursos o uno específico.</p>
-                            <ul>
-                                <li><code>/cliente/verClientes</code> para ver todos los clientes.</li>
-                                <li><code>/producto/verProductos</code> para ver todos los productos.</li>
-                                <li><code>/venta/verVentas</code> para ver todos los ventas.</li>
-                                <li><code>/cliente/verCliente/{id}</code> para ver un cliente por ID.</li>
-                                <li><code>/producto/verProducto/{id}</code> para ver un producto por ID.</li>
-                                <li><code>/venta/verVenta/{id}</code> para ver una venta por ID.</li>
-                            </ul>
+                            <div class="text-center mb-4">
+                                <i class="bi bi-unlock display-4 text-primary"></i>
+                            </div>
+                            <h3 class="text-center mb-3">Acceso Libre</h3>
+                            <p class="text-center">Todos los endpoints de la API son públicos y no requieren autenticación para su consumo.</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-6">
-                    <div class="card mb-3">
+                <div class="col-md-4">
+                    <div class="api-card card h-100">
                         <div class="card-body">
-                            <h5 class="card-title"><i class="bi bi-plus-circle"></i> POST</h5>
-                            <p class="card-text">Para crear nuevos recursos en el sistema.</p>
-                            <ul>
-                                <li><code>/cliente/crearCliente</code> para crear un nuevo cliente.</li>
-                                <li><code>/producto/crearProducto</code> para crear un nuevo producto.</li>
-                                <li><code>/venta/crearVenta</code> para crear una nueva venta.</li>
-                            </ul>
+                            <div class="text-center mb-4">
+                                <i class="bi bi-filetype-json display-4 text-success"></i>
+                            </div>
+                            <h3 class="text-center mb-3">Formato JSON</h3>
+                            <p class="text-center">Intercambio de datos estandarizado en formato JSON con soporte para CORS.</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-6">
-                    <div class="card mb-3">
+                <div class="col-md-4">
+                    <div class="api-card card h-100">
                         <div class="card-body">
-                            <h5 class="card-title"><i class="bi bi-pencil-square"></i> PUT</h5>
-                            <p class="card-text">Para actualizar un recurso existente.</p>
-                            <ul>
-                                <li><code>/cliente/editarCliente/{id}</code> para editar un cliente.</li>
-                                <li><code>/producto/editarProducto/{id}</code> para editar un producto.</li>
-                                <li><code>/venta/editarVenta/{id}</code> para editar una venta.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <h5 class="card-title"><i class="bi bi-trash3"></i> DELETE</h5>
-                            <p class="card-text">Para eliminar un recurso existente.</p>
-                            <ul>
-                                <li><code>/cliente/eliminarCliente/{id}</code> para eliminar un cliente.</li>
-                                <li><code>/producto/eliminarProducto/{id}</code> para eliminar un producto.</li>
-                                <li><code>/venta/eliminarVenta/{id}</code> para eliminar una venta.</li>
-                            </ul>
+                            <div class="text-center mb-4">
+                                <i class="bi bi-lightning-charge display-4 text-warning"></i>
+                            </div>
+                            <h3 class="text-center mb-3">Alta Disponibilidad</h3>
+                            <p class="text-center">Infraestructura escalable construida con Spring Boot 3 y Java 17.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Ejemplos de JSON -->
-        <div class="container mt-5">
-            <h2 class="text-center mb-4"><i class="bi bi-code"></i> Ejemplos de Objetos JSON</h2>
-
-            <!-- JSON Cliente -->
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-person-fill"></i> Cliente</h5>
-                    <p class="card-text">Cuando creas o actualizas un cliente, el servidor espera un objeto JSON como el siguiente:</p>
-                    <pre class="bg-light p-3 rounded">
-{
-    "nombre": "Juan",
-    "apellido": "Pérez",
-    "dni": "12345678"
-}
-                    </pre>
-                </div>
-            </div>
-
-            <!-- JSON Producto -->
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-box-seam"></i> Producto</h5>
-                    <p class="card-text">Para la creación o actualización de un producto, se espera un objeto JSON como el siguiente:</p>
-                    <pre class="bg-light p-3 rounded">
-{
-    "nombre": "Taza",
-    "marca": "Cerámicas S.A.",
-    "costo": 250.00,
-    "cantidad_disponible": 100
-}
-                    </pre>
-                </div>
-            </div>
-
-            <!-- JSON Venta -->
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-receipt"></i> Venta</h5>
-                    <p class="card-text">Al crear o editar una venta, el servidor espera un objeto JSON que incluya un cliente y una lista de productos:</p>
-                    <pre class="bg-light p-3 rounded">
-{
-    "fecha_venta": "2024-10-18",
-    "total": 500.00,
-    "unCliente": {
-        "id_cliente": 1
-    },
-    "listaProductos": [
-        {
-            "codigo_producto": 101
-        },
-        {
-            "codigo_producto": 102
-        }
-    ]
-}
-                    </pre>
+        <!-- Admin Section -->
+        <div class="bg-light py-5">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h2><i class="bi bi-shield-lock"></i> Panel de Administración</h2>
+                        <p class="lead mb-4">¿Necesitas gestionar el contenido del sistema? Accede al área restringida para administradores.</p>
+                        <a th:href="@{/admin/login}" class="btn btn-dark">
+                            <i class="bi bi-box-arrow-in-right"></i> Acceso Administrativo
+                        </a>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <i class="bi bi-shield-lock display-1 text-muted"></i>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Bootstrap JS Bundle with Popper -->
+        <footer class="bg-dark text-white py-4">
+            <div class="container text-center">
+                <p class="mb-0">© 2024 Bazar API - Todos los endpoints públicos están documentados en <a href="/swagger-ui/index.html" class="text-white">Swagger UI</a></p>
+            </div>
+        </footer>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </body>
-
 </html>

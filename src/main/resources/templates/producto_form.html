@@ -1,63 +1,114 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Crear Venta</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        <!-- Bootstrap Icons -->
+        <title>Registro de Producto | Panel Admin</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+        <style>
+            .card-header-gradient {
+                background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+                color: white;
+                border-radius: 0.375rem 0.375rem 0 0 !important;
+            }
+            .form-control:focus {
+                border-color: #6a11cb;
+                box-shadow: 0 0 0 0.25rem rgba(106, 17, 203, 0.25);
+            }
+            .btn-submit {
+                background-color: #6a11cb;
+                border-color: #6a11cb;
+            }
+            .btn-submit:hover {
+                background-color: #5a0db3;
+                border-color: #5a0db3;
+            }
+            .input-group-text {
+                min-width: 45px;
+                justify-content: center;
+            }
+        </style>
     </head>
 
     <body>
         <div th:replace="~{components/navbar :: nav_bar}"></div>
 
-        <!-- Formulario de creación de Producto -->
-        <div class="container mt-5">
+        <!-- Main Content -->
+        <div class="container py-5">
             <div class="row justify-content-center">
-                <div class="col-lg-6 col-md-8 col-sm-10">
-                    <div class="card shadow-lg">
-                        <div class="card-header text-center bg-primary text-white">
-                            <h2><i class="bi bi-box-seam"></i> Registro de Producto</h2>
+                <div class="col-lg-8">
+                    <div class="card shadow-lg border-0">
+                        <!-- Card Header -->
+                        <div class="card-header card-header-gradient py-3">
+                            <h2 class="h4 mb-0 text-center">
+                                <i class="bi bi-box-seam me-2"></i>Nuevo Producto
+                            </h2>
                         </div>
-                        <div class="card-body">
+
+                        <!-- Card Body -->
+                        <div class="card-body p-4">
                             <form th:action="@{/producto/guardar}" th:object="${producto}" method="post">
-                                <div class="form-group mb-3">
-                                    <label for="nombre" class="form-label">Nombre: </label>
+                                <!-- Nombre -->
+                                <div class="mb-4">
+                                    <label for="nombre" class="form-label fw-semibold">Nombre del Producto</label>
                                     <div class="input-group">
-                                        <span class="input-group-text"><i class="bi bi-tag-fill"></i></span>
-                                        <input type="text" id="nombre" name="nombre" th:field="*{nombre}" class="form-control" placeholder="Ingrese el nombre del producto" required>
+                                        <span class="input-group-text">
+                                            <i class="bi bi-tag"></i>
+                                        </span>
+                                        <input type="text" id="nombre" name="nombre" th:field="*{nombre}" 
+                                               class="form-control" placeholder="Ej: Laptop HP 15-dw1024la" required>
                                     </div>
                                 </div>
-                                <div class="form-group mb-3">
-                                    <label for="marca" class="form-label">Marca: </label>
+
+                                <!-- Marca -->
+                                <div class="mb-4">
+                                    <label for="marca" class="form-label fw-semibold">Marca</label>
                                     <div class="input-group">
-                                        <span class="input-group-text"><i class="bi bi-building"></i></span>
-                                        <input type="text" id="marca" name="marca" th:field="*{marca}" class="form-control" placeholder="Ingrese la marca del producto" required>
+                                        <span class="input-group-text">
+                                            <i class="bi bi-building"></i>
+                                        </span>
+                                        <input type="text" id="marca" name="marca" th:field="*{marca}" 
+                                               class="form-control" placeholder="Ej: HP, Sony, Samsung" required>
                                     </div>
                                 </div>
-                                <div class="form-group mb-3">
-                                    <label for="costo" class="form-label">Costo: </label>
+
+                                <!-- Costo -->
+                                <div class="mb-4">
+                                    <label for="costo" class="form-label fw-semibold">Precio Unitario</label>
                                     <div class="input-group">
-                                        <span class="input-group-text"><i class="bi bi-cash-stack"></i></span>
-                                        <input type="number" id="costo" name="costo" th:field="*{costo}" class="form-control" placeholder="Ingrese el costo" required>
+                                        <span class="input-group-text">
+                                            <i class="bi bi-currency-dollar"></i>
+                                        </span>
+                                        <input type="number" step="0.01" id="costo" name="costo" th:field="*{costo}" 
+                                               class="form-control" placeholder="Ej: 1250.99" required>
+                                        <span class="input-group-text">.00</span>
                                     </div>
                                 </div>
-                                <div class="form-group mb-3">
-                                    <label for="cantidad_disponible" class="form-label">Cantidad disponible: </label>
+
+                                <!-- Cantidad -->
+                                <div class="mb-4">
+                                    <label for="cantidad_disponible" class="form-label fw-semibold">Stock Inicial</label>
                                     <div class="input-group">
-                                        <span class="input-group-text"><i class="bi bi-boxes"></i></span>
-                                        <input type="number" id="cantidad_disponible" name="cantidad_disponible" th:field="*{cantidad_disponible}" class="form-control" placeholder="Ingrese la cantidad disponible" required>
+                                        <span class="input-group-text">
+                                            <i class="bi bi-box-seam"></i>
+                                        </span>
+                                        <input type="number" id="cantidad_disponible" name="cantidad_disponible" 
+                                               th:field="*{cantidad_disponible}" class="form-control" 
+                                               placeholder="Ej: 50" required>
+                                        <span class="input-group-text">unidades</span>
                                     </div>
                                 </div>
-                                <div class="d-flex justify-content-between mt-4">
-                                    <button class="btn btn-success">
-                                        <i class="bi bi-save"></i> Guardar
-                                    </button>
-                                    <a class="btn btn-danger" th:href="@{/producto}">
-                                        <i class="bi bi-x-circle"></i> Cancelar
+
+                                <!-- Form Actions -->
+                                <div class="d-grid gap-3 d-md-flex justify-content-md-end mt-4 pt-3">
+                                    <a th:href="@{/producto}" class="btn btn-outline-secondary me-md-2">
+                                        <i class="bi bi-arrow-left-circle me-1"></i> Cancelar
                                     </a>
+                                    <button type="submit" class="btn btn-submit text-white">
+                                        <i class="bi bi-save me-1"></i> Registrar Producto
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -66,7 +117,6 @@
             </div>
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </body>
-
 </html>

@@ -3,14 +3,16 @@ package com.api.bazar.service;
 import com.api.bazar.model.Venta;
 import com.api.bazar.repository.IVentaRepository;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class VentaService implements IVentaService {
 
-    @Autowired
-    private IVentaRepository ventaRepo;
+    private final IVentaRepository ventaRepo;
+
+    public VentaService(IVentaRepository ventaRepo) {
+        this.ventaRepo = ventaRepo;
+    }
 
     @Override
     public List<Venta> findAll() {
@@ -37,7 +39,7 @@ public class VentaService implements IVentaService {
         vent.setListaProductos(venta.getListaProductos());
         vent.setUnCliente(venta.getUnCliente());
         vent.setTotal(venta.getTotal());
-        
+
         this.ventaRepo.save(vent);
     }
 

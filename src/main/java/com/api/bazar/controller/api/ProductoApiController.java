@@ -1,27 +1,30 @@
-package com.api.bazar.restcontroller;
+package com.api.bazar.controller.api;
 
 import com.api.bazar.dto.ProductoDTO;
 import com.api.bazar.model.Producto;
 import com.api.bazar.service.IProductoService;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class ProductoRestController {
+@RequestMapping("/api/producto")
+public class ProductoApiController {
 
-    @Autowired
-    private IProductoService productoService;
+    private final IProductoService productoService;
 
-    @GetMapping("/producto/verProductos")
+    public ProductoApiController(IProductoService productoService) {
+        this.productoService = productoService;
+    }
+
+    @GetMapping
     public List<ProductoDTO> verProductos() {
         List<Producto> productos = productoService.findAll();
 
@@ -40,7 +43,7 @@ public class ProductoRestController {
         return productosDTO;
     }
 
-    @GetMapping("/producto/verProducto/{id}")
+    @GetMapping("/{id}")
     public ProductoDTO verProducto(@PathVariable Long id) {
         Producto prod = productoService.findById(id);
         ProductoDTO prodDTO = new ProductoDTO();
@@ -53,19 +56,19 @@ public class ProductoRestController {
         return prodDTO;
     }
 
-    @PostMapping("/producto/crearProducto")
+    @PostMapping
     public String crearProducto(@RequestBody Producto producto) {
         productoService.saveOne(producto);
         return "Producto guardado correctamente";
     }
 
-    @PutMapping("/producto/editarProducto/{id}")
+    @PutMapping("/{id}")
     public String editarProducto(@PathVariable Long id, @RequestBody Producto producto) {
         productoService.updateOne(producto, id);
         return "Producto actualizado correctamente";
     }
 
-    @DeleteMapping("/producto/eliminarProducto/{id}")
+    @DeleteMapping("/{id}")
     public String eliminarProducto(@PathVariable Long id) {
         productoService.deleteOne(id);
         return "Producto eliminado con exito";
