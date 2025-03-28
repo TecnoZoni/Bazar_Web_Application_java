@@ -1,10 +1,12 @@
 package com.api.bazar.controller.api;
 
 import com.api.bazar.dto.ProductoDTO;
+import com.api.bazar.mapper.ProductoMapper;
 import com.api.bazar.model.Producto;
 import com.api.bazar.service.IProductoService;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,41 +21,23 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductoApiController {
 
     private final IProductoService productoService;
+    private final ProductoMapper productoMapper;
 
-    public ProductoApiController(IProductoService productoService) {
+    public ProductoApiController(IProductoService productoService, ProductoMapper productoMapper) {
         this.productoService = productoService;
+        this.productoMapper = productoMapper;
     }
 
     @GetMapping
     public List<ProductoDTO> verProductos() {
-        List<Producto> productos = productoService.findAll();
-
-        List<ProductoDTO> productosDTO = new ArrayList<>();
-
-        for (Producto prod : productos) {
-            ProductoDTO prodDTO = new ProductoDTO();
-            prodDTO.setCodigo_producto(prod.getCodigo_producto());
-            prodDTO.setNombre(prod.getNombre());
-            prodDTO.setMarca(prod.getMarca());
-            prodDTO.setCosto(prod.getCosto());
-            prodDTO.setCantidad_disponible(prod.getCantidad_disponible());
-            productosDTO.add(prodDTO);
-        }
-
-        return productosDTO;
+        return productoService.findAll().stream()
+                .map(productoMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
     public ProductoDTO verProducto(@PathVariable Long id) {
-        Producto prod = productoService.findById(id);
-        ProductoDTO prodDTO = new ProductoDTO();
-        prodDTO.setCodigo_producto(prod.getCodigo_producto());
-        prodDTO.setNombre(prod.getNombre());
-        prodDTO.setMarca(prod.getMarca());
-        prodDTO.setCosto(prod.getCosto());
-        prodDTO.setCantidad_disponible(prod.getCantidad_disponible());
-
-        return prodDTO;
+        return productoMapper.toDto(productoService.findById(id));
     }
 
     @PostMapping

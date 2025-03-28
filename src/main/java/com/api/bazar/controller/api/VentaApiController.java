@@ -1,6 +1,7 @@
 package com.api.bazar.controller.api;
 
 import com.api.bazar.dto.VentaDTO;
+import com.api.bazar.mapper.VentaMapper;
 import com.api.bazar.model.Producto;
 import java.util.List;
 import com.api.bazar.model.Venta;
@@ -21,51 +22,23 @@ import org.springframework.web.bind.annotation.RestController;
 public class VentaApiController {
 
     private final IVentaService ventaService;
+    private final VentaMapper ventaMapper;
 
-    public VentaApiController(IVentaService ventaService) {
+    public VentaApiController(IVentaService ventaService, VentaMapper ventaMapper) {
         this.ventaService = ventaService;
+        this.ventaMapper = ventaMapper;
     }
 
     @GetMapping
     public List<VentaDTO> verVentas() {
-        List<Venta> ventas = ventaService.findAll();
-        List<VentaDTO> ventasDTO = new ArrayList<>();
-
-        for (Venta vent : ventas) {
-            VentaDTO ventDTO = new VentaDTO();
-            ventDTO.setCodigo_venta(vent.getCodigo_venta());
-            ventDTO.setFecha_venta(vent.getFecha_venta());
-            ventDTO.setTotal(vent.getTotal());
-            ventDTO.setNombreCliente(vent.getUnCliente().getNombre() + " " + vent.getUnCliente().getApellido());
-
-            List<String> nombresProductos = vent.getListaProductos().stream()
-                    .map(Producto::getNombre)
-                    .collect(Collectors.toList());
-            ventDTO.setListaProductos(nombresProductos);
-
-            ventasDTO.add(ventDTO);
-        }
-
-        return ventasDTO;
+        return ventaService.findAll().stream()
+                .map(ventaMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
     public VentaDTO verVenta(@PathVariable Long id) {
-        Venta vent = ventaService.findById(id);
-        VentaDTO ventDTO = new VentaDTO();
-
-        ventDTO.setCodigo_venta(vent.getCodigo_venta());
-        ventDTO.setFecha_venta(vent.getFecha_venta());
-        ventDTO.setTotal(vent.getTotal());
-
-        ventDTO.setNombreCliente(vent.getUnCliente().getNombre());
-
-        List<String> nombresProductos = vent.getListaProductos().stream()
-                .map(Producto::getNombre)
-                .collect(Collectors.toList());
-        ventDTO.setListaProductos(nombresProductos);
-
-        return ventDTO;
+        return ventaMapper.toDto(ventaService.findById(id));
     }
 
     @PostMapping
