@@ -3,6 +3,7 @@ package com.api.bazar.controller.web;
 import com.api.bazar.model.Producto;
 import com.api.bazar.service.IProductoService;
 import java.util.List;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/producto")
+@PreAuthorize("hasRole('ADMIN')")
 public class ProductoController {
 
     private final IProductoService prodServi;
@@ -20,7 +23,7 @@ public class ProductoController {
         this.prodServi = prodServi;
     }
 
-    @RequestMapping("/producto")
+    @GetMapping
     public String verPaginaProducto(Model model) {
         List<Producto> listaProductos = prodServi.findAll();
         model.addAttribute("listaProductos", listaProductos);
@@ -28,7 +31,7 @@ public class ProductoController {
         return "producto";
     }
 
-    @GetMapping("/producto/nuevo")
+    @GetMapping("/nuevo")
     public String mostarFormularioCreacionProducto(Model model) {
         Producto producto = new Producto();
         model.addAttribute("producto", producto);
@@ -36,19 +39,19 @@ public class ProductoController {
         return "producto_form";
     }
 
-    @PostMapping("/producto/guardar")
+    @PostMapping("/guardar")
     public String guardarProducto(@ModelAttribute("producto") Producto producto) {
         prodServi.saveOne(producto);
         return "redirect:/producto";
     }
 
-    @RequestMapping("/producto/eliminar/{id}")
+    @RequestMapping("/eliminar/{id}")
     public String eliminarProducto(@PathVariable Long id) {
         prodServi.deleteOne(id);
         return "redirect:/producto";
     }
 
-    @RequestMapping("/producto/editar/{id}")
+    @RequestMapping("/editar/{id}")
     public String actualizarProducto(@PathVariable("id") Long id, @ModelAttribute Producto productoEditado) {
         prodServi.updateOne(productoEditado, id);
         return "redirect:/producto";

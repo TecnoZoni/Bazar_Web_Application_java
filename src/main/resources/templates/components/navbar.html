@@ -6,20 +6,40 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
                     <a class="nav-link" th:href="@{/cliente}">
                         <i class="bi bi-person-fill"></i> Gestión de Clientes
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
                     <a class="nav-link" th:href="@{/venta}">
                         <i class="bi bi-cart-fill"></i> Gestión de Ventas
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
                     <a class="nav-link" th:href="@{/producto}">
                         <i class="bi bi-box-seam"></i> Gestión de Productos
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <span class="nav-link text-light">
+                        <i class="bi bi-person-circle"></i>
+                        <span sec:authentication="name"></span>
+                    </span>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <form th:action="@{/logout}" method="post" class="nav-link">
+                        <button type="submit" class="btn btn-link text-light p-0">
+                            <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                        </button>
+                    </form>
+                </li>
+                <li class="nav-item" sec:authorize="!isAuthenticated()">
+                    <a class="nav-link" th:href="@{/admin/login}">
+                        <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
                     </a>
                 </li>
             </ul>

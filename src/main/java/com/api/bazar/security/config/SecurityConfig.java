@@ -15,18 +15,60 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(csrf -> csrf.disable())
-                .httpBasic(Customizer.withDefaults()) //se usa cuando solo vas a logear con usuarios y contraseñas
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                // Permisos para vistas públicas
+                .requestMatchers(
+                        "/",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**",
+                        "/api/**",
+                        "/css/**",
+                        "/js/**",
+                        "/images/**"
+                ).permitAll()
+                // Permisos para el login
+                .requestMatchers(
+                        "/admin/login",
+                        "/admin/login-error"
+                ).permitAll()
+                // Todas las rutas administrativas requieren rol ADMIN
+                .requestMatchers(
+                        "/cliente/**",
+                        "/venta/**",
+                        "/producto/**"
+                ).hasRole("ADMIN")
+                // Todas las demás rutas requieren autenticación
+                .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                .loginPage("/admin/login")
+                .defaultSuccessUrl("/", true)
+                .failureUrl("/admin/login-error")
+                .permitAll()
+                )
+                .logout(logout -> logout
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/admin/login?logout")
+                .permitAll()
+                )
+                .exceptionHandling(exception -> exception
+                .accessDeniedPage("/admin/access-denied") // Página para acceso denegado
+                )
+                .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                )
+                .httpBasic(Customizer.withDefaults()) // Para la API
                 .build();
     }
 
@@ -47,5 +89,4 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }

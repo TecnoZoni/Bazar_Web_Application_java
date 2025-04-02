@@ -2,12 +2,11 @@ package com.api.bazar.controller.api;
 
 import com.api.bazar.dto.VentaDTO;
 import com.api.bazar.mapper.VentaMapper;
-import com.api.bazar.model.Producto;
 import java.util.List;
 import com.api.bazar.model.Venta;
 import com.api.bazar.service.IVentaService;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/venta")
+@PreAuthorize("permitAll()")
 public class VentaApiController {
 
     private final IVentaService ventaService;

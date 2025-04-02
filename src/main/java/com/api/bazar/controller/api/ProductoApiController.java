@@ -4,9 +4,9 @@ import com.api.bazar.dto.ProductoDTO;
 import com.api.bazar.mapper.ProductoMapper;
 import com.api.bazar.model.Producto;
 import com.api.bazar.service.IProductoService;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/producto")
+@PreAuthorize("permitAll()")
 public class ProductoApiController {
 
     private final IProductoService productoService;

@@ -9,6 +9,7 @@ import com.api.bazar.service.IVentaService;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
+@RequestMapping("/venta")
+@PreAuthorize("hasRole('ADMIN')")
 public class VentaController {
 
     private final IVentaService ventaService;
@@ -33,7 +36,7 @@ public class VentaController {
         this.productoService = productoService;
     }
 
-    @RequestMapping("/venta")
+    @GetMapping
     public String verPaginaVenta(Model model) {
         List<Venta> listaVentas = this.ventaService.findAll();
         model.addAttribute("listaVentas", listaVentas);
@@ -41,7 +44,7 @@ public class VentaController {
         return "venta";
     }
 
-    @GetMapping("/venta/nueva")
+    @GetMapping("/nueva")
     public String mostrarFormularioCreacionVenta(Model model) {
         Venta nuevaVenta = new Venta();
         model.addAttribute("venta", nuevaVenta);
@@ -56,7 +59,7 @@ public class VentaController {
         return "venta_form";
     }
 
-    @PostMapping("/venta/guardar")
+    @PostMapping("/guardar")
     public String guardarVenta(@ModelAttribute("venta") Venta venta) {
         // Establecer la fecha actual para la venta
         venta.setFecha_venta(LocalDate.now());
@@ -79,13 +82,13 @@ public class VentaController {
         return "redirect:/venta"; // Redirige a la lista de ventas después de guardar
     }
 
-    @RequestMapping("/venta/eliminar/{id}")
+    @RequestMapping("/eliminar/{id}")
     public String eliminarVenta(@PathVariable Long id) {
         ventaService.deleteOne(id);
         return "redirect:/venta";
     }
 
-    @RequestMapping("/venta/editar/{id}")
+    @RequestMapping("/editar/{id}")
     public ModelAndView formEditarVenta(@PathVariable Long id) {
         ModelAndView modelo = new ModelAndView("venta_form_editar");
 
@@ -101,7 +104,7 @@ public class VentaController {
         return modelo;
     }
 
-    @PostMapping("/venta/editar")
+    @PostMapping("/editar")
     public String editarVenta(@ModelAttribute("venta") Venta venta) {
         Venta ventaExistente = ventaService.findById(venta.getCodigo_venta());
 
